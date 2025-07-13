@@ -4,7 +4,7 @@ import { Order } from '@/lib/models/order'
 
 export async function POST(req: Request) {
   await dbConnect()
-  const body = await req.json()
+  const body = (await req.json()) as Record<string, any>
 
   try {
     const order = await Order.create(body)
@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'Order failed' }, { status: 500 })
   }
 }
+
 export async function GET(req: Request) {
   await dbConnect()
   const { searchParams } = new URL(req.url)
@@ -26,12 +27,13 @@ export async function GET(req: Request) {
     return NextResponse.json({ message: 'Failed to fetch orders' }, { status: 500 })
   }
 }
+
 export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
   await dbConnect()
-  const body = await req.json()
+  const body = (await req.json()) as Record<string, any> // <-- Assert type here
 
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -44,6 +46,7 @@ export async function PUT(
     return NextResponse.json({ message: 'Failed to update order' }, { status: 500 })
   }
 }
+
 export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
